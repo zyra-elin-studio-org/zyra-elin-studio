@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell, PageHeader } from "@/components/site/SiteShell";
+import { SiteShell } from "@/components/site/SiteShell";
 import { Services, WhyAI } from "@/components/site/sections";
 import { useLanguage } from "@/hooks/useLanguage";
 
