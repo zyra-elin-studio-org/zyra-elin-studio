@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useSiteSettings, waLink } from "@/hooks/useSiteSettings";
+import { Logo } from "@/components/site/Logo";
 
 export function Footer() {
   const { t } = useLanguage();
@@ -10,10 +11,7 @@ export function Footer() {
       <div className="absolute inset-x-0 top-0 h-0.5 bg-gold-gradient" />
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-full bg-gold-gradient font-display text-base font-bold text-primary-foreground">ZE</span>
-            <span className="font-display text-lg font-semibold">Zyra Elin Studio</span>
-          </div>
+          <Logo size={44} withWordmark />
           <p className="mt-4 text-sm text-muted-foreground">{t.footer.tag}</p>
           <div className="mt-5 flex gap-3">
             {s && <a href={s.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className="grid h-9 w-9 place-items-center rounded-full border border-border text-muted-foreground hover:border-gold/40 hover:text-gold">f</a>}
@@ -23,11 +21,13 @@ export function Footer() {
         <div>
           <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gold">{t.footer.quick}</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><a href="#home" className="hover:text-foreground">{t.nav.home}</a></li>
-            <li><a href="#about" className="hover:text-foreground">{t.nav.about}</a></li>
-            <li><a href="#services" className="hover:text-foreground">{t.nav.services}</a></li>
-            <li><a href="#portfolio" className="hover:text-foreground">{t.nav.portfolio}</a></li>
-            <li><a href="#contact" className="hover:text-foreground">{t.nav.contact}</a></li>
+            <li><Link to="/" className="hover:text-foreground">{t.nav.home}</Link></li>
+            <li><Link to="/about" className="hover:text-foreground">{t.nav.about}</Link></li>
+            <li><Link to="/services" className="hover:text-foreground">{t.nav.services}</Link></li>
+            <li><Link to="/portfolio" className="hover:text-foreground">{t.nav.portfolio}</Link></li>
+            <li><Link to="/pricing" className="hover:text-foreground">{t.nav.pricing}</Link></li>
+            <li><Link to="/faq" className="hover:text-foreground">{t.nav.faq}</Link></li>
+            <li><Link to="/contact" className="hover:text-foreground">{t.nav.contact}</Link></li>
           </ul>
         </div>
         <div>
