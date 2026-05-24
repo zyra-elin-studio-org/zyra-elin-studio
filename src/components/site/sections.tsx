@@ -250,6 +250,39 @@ export function Pricing() {
   );
 }
 
+function FAQAnswer({ text }: { text: string }) {
+  const lines = text.split("\n");
+  const waRe = /WhatsApp:\s*(\+?[\d]+)/i;
+  return (
+    <div className="space-y-1">
+      {lines.map((line, i) => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith("✦")) {
+          return (
+            <div key={i} className="flex items-start gap-2">
+              <span style={{ color: "#D4A853" }}>✦</span>
+              <span>{trimmed.slice(1).trim()}</span>
+            </div>
+          );
+        }
+        const m = trimmed.match(waRe);
+        if (m) {
+          const num = m[1].replace(/\D/g, "");
+          return (
+            <div key={i}>
+              WhatsApp:{" "}
+              <a href={`https://wa.me/${num}`} target="_blank" rel="noreferrer" style={{ color: "#D4A853" }} className="font-semibold hover:underline">
+                {m[1]}
+              </a>
+            </div>
+          );
+        }
+        return <p key={i}>{line}</p>;
+      })}
+    </div>
+  );
+}
+
 export function FAQ() {
   const { t } = useLanguage();
   const [open, setOpen] = useState<number | null>(0);
