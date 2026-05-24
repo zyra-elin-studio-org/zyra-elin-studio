@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Hero, Stats, About, Services, WhyAI } from "@/components/site/sections";
+import PresenterSection from "@/components/site/PresenterSection";
 import { useLanguage } from "@/hooks/useLanguage";
 
 export const Route = createFileRoute("/")({
@@ -21,6 +22,7 @@ function Home() {
   return (
     <SiteShell>
       <Hero />
+      <PresenterSection />
       <Stats />
       <About />
       <Services />
