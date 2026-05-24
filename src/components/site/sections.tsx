@@ -285,7 +285,12 @@ function FAQAnswer({ text }: { text: string }) {
 
 export function FAQ() {
   const { t } = useLanguage();
-  const [open, setOpen] = useState<number | null>(0);
+  const [openSet, setOpenSet] = useState<Set<number>>(() => new Set(t.faq.items.map((_, i) => i)));
+  const toggle = (i: number) => setOpenSet((prev) => {
+    const next = new Set(prev);
+    if (next.has(i)) next.delete(i); else next.add(i);
+    return next;
+  });
   return (
     <section id="faq" className="relative px-6 py-24">
       <div className="mx-auto max-w-3xl">
@@ -296,11 +301,11 @@ export function FAQ() {
         </div>
         <div className="mt-12 space-y-3">
           {t.faq.items.map((it, i) => {
-            const isOpen = open === i;
+            const isOpen = openSet.has(i);
             return (
               <div key={it.q} className="glass gradient-border overflow-hidden rounded-2xl">
                 <button
-                  onClick={() => setOpen(isOpen ? null : i)}
+                  onClick={() => toggle(i)}
                   className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition hover:bg-gold/5"
                 >
                   <span className="font-display text-base font-semibold text-foreground sm:text-lg">{it.q}</span>
