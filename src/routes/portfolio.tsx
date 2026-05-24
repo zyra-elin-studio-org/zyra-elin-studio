@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell, PageHeader } from "@/components/site/SiteShell";
+import { SiteShell } from "@/components/site/SiteShell";
 import { Portfolio } from "@/components/site/sections";
-import { useLanguage } from "@/hooks/useLanguage";
 
 export const Route = createFileRoute("/portfolio")({
   head: () => ({
@@ -16,10 +15,8 @@ export const Route = createFileRoute("/portfolio")({
 });
 
 function PortfolioPage() {
-  const { t } = useLanguage();
   return (
     <SiteShell>
-      <PageHeader eyebrow={t.nav.portfolio} title={t.portfolio.heading} sub={t.portfolio.sub} />
       <Portfolio />
     </SiteShell>
   );

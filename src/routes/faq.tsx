@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell, PageHeader } from "@/components/site/SiteShell";
+import { SiteShell } from "@/components/site/SiteShell";
 import { FAQ } from "@/components/site/sections";
-import { useLanguage } from "@/hooks/useLanguage";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
@@ -16,10 +15,8 @@ export const Route = createFileRoute("/faq")({
 });
 
 function FAQPage() {
-  const { t } = useLanguage();
   return (
     <SiteShell>
-      <PageHeader eyebrow={t.nav.faq} title={t.faq.heading} sub={t.faq.sub} />
       <FAQ />
     </SiteShell>
   );

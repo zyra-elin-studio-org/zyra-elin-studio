@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell, PageHeader } from "@/components/site/SiteShell";
+import { SiteShell } from "@/components/site/SiteShell";
 import { Services, WhyAI } from "@/components/site/sections";
 import { useLanguage } from "@/hooks/useLanguage";
 
@@ -19,7 +19,6 @@ function ServicesPage() {
   const { t } = useLanguage();
   return (
     <SiteShell>
-      <PageHeader eyebrow={t.nav.services} title={t.services.heading} sub={t.services.sub} />
       <Services />
       <WhyAI />
     </SiteShell>
