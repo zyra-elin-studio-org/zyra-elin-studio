@@ -19,7 +19,6 @@ function ServicesPage() {
   const { t } = useLanguage();
   return (
     <SiteShell>
-      <PageHeader eyebrow={t.nav.services} title={t.services.heading} sub={t.services.sub} />
       <Services />
       <WhyAI />
     </SiteShell>
