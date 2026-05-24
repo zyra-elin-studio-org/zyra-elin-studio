@@ -1,6 +1,6 @@
 export const translations = {
   en: {
-    nav: { home: "Home", about: "About", services: "Services", portfolio: "Portfolio", contact: "Contact", book: "Book Now", admin: "Admin" },
+    nav: { home: "Home", about: "About", services: "Services", portfolio: "Portfolio", pricing: "Pricing", faq: "FAQ", contact: "Contact", book: "Book Now", admin: "Admin" },
     hero: {
       badge: "🤖 Bangladesh's First AI Brand Presenter",
       line1: "Your Brand Deserves",
@@ -45,10 +45,34 @@ export const translations = {
       form: { name: "Full Name", email: "Email", phone: "Phone", brand: "Brand / Company", service: "Service Type", budget: "Budget Range", message: "Your Message", submit: "Send Message", sending: "Sending…", success: "Thanks! I'll be in touch shortly.", error: "Something went wrong. Please try again." },
       responseTime: "⚡ Usually replies within 2 hours",
     },
+    pricing: {
+      heading: "Simple, Transparent Pricing",
+      sub: "Pick a package that fits — or message me for a custom quote.",
+      popular: "Most Popular",
+      cta: "Get Started",
+      note: "All prices in BDT. Custom packages available on request.",
+      plans: [
+        { name: "Starter", price: "৳8,000", period: "per video", featured: false, features: ["1 AI-presenter video (up to 60s)", "1 round of revisions", "HD 1080p export", "Bangla or English", "3-day delivery"] },
+        { name: "Brand", price: "৳25,000", period: "4 videos / month", featured: true, features: ["4 AI videos per month", "2 rounds of revisions each", "HD 1080p + vertical reels", "Script + caption writing", "Priority WhatsApp support", "48-hour delivery"] },
+        { name: "Enterprise", price: "Custom", period: "tailored campaigns", featured: false, features: ["Unlimited videos", "Dedicated creative direction", "Multi-platform packaging", "Bangla + English bilingual", "Same-day turnaround", "Monthly performance report"] },
+      ],
+    },
+    faq: {
+      heading: "Frequently Asked",
+      sub: "Everything you need to know before booking.",
+      items: [
+        { q: "Is Zyra Elin a real person?", a: "Zyra Elin is a fully AI-generated digital brand presenter — designed to feel warm, real and on-brand for every video. No scheduling, no studio costs, premium quality every time." },
+        { q: "How long does a video take?", a: "Starter videos ship in 3 days, Brand-plan videos in 48 hours, and Enterprise can deliver same-day. We confirm the timeline when we receive your brief." },
+        { q: "Which languages are supported?", a: "Bangla and English, with natural pronunciation and code-switching. We can also localize for specific dialects on request." },
+        { q: "Can I send my own script?", a: "Yes. Send your script or just a product brief and we'll write one for you. Every package includes script work." },
+        { q: "How do payments work?", a: "50% advance to start, 50% on final delivery. We accept bKash, Nagad, bank transfer and international card payments." },
+        { q: "Do you handle posting and ads?", a: "On the Brand and Enterprise plans, yes — we package vertical reels for Facebook, Instagram, TikTok and YouTube Shorts, and can advise on paid promotion." },
+      ],
+    },
     footer: { rights: "All rights reserved.", powered: "Powered by AI Technology 🤖", quick: "Quick Links", services: "Services", contactCol: "Contact", tag: "Bangladesh's premier AI digital brand presenter." },
   },
   bn: {
-    nav: { home: "হোম", about: "পরিচিতি", services: "সেবা", portfolio: "পোর্টফোলিও", contact: "যোগাযোগ", book: "বুক করুন", admin: "অ্যাডমিন" },
+    nav: { home: "হোম", about: "পরিচিতি", services: "সেবা", portfolio: "পোর্টফোলিও", pricing: "প্যাকেজ", faq: "প্রশ্নোত্তর", contact: "যোগাযোগ", book: "বুক করুন", admin: "অ্যাডমিন" },
     hero: {
       badge: "🤖 বাংলাদেশের প্রথম AI Brand Presenter",
       line1: "আপনার Brand-এর",
