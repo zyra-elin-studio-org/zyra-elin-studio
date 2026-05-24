@@ -95,7 +95,7 @@ export const translations = {
     },
     footer: { rights: "সর্বস্বত্ব সংরক্ষিত।", powered: "AI Technology দিয়ে চালিত 🤖", quick: "Quick Links", services: "Services", contactCol: "যোগাযোগ", tag: "বাংলাদেশের প্রথম সারির AI Digital Brand Presenter।" },
   },
-} as const;
+};
 
 export type Lang = keyof typeof translations;
 export type T = typeof translations.en;

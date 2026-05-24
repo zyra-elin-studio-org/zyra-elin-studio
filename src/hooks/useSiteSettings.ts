@@ -21,7 +21,7 @@ export function useSiteSettings() {
     queryFn: async (): Promise<SiteSettings> => {
       const { data } = await supabase.from("site_settings").select("key,value");
       const out: SiteSettings = { ...defaults };
-      data?.forEach((row) => { (out as Record<string, string>)[row.key] = row.value; });
+      data?.forEach((row) => { (out as unknown as Record<string, string>)[row.key] = row.value; });
       return out;
     },
     staleTime: 60_000,
