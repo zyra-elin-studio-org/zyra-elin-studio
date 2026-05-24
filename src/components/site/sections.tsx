@@ -275,8 +275,8 @@ export function FAQ() {
                 </button>
                 {isOpen && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
-                    className="border-t border-border/40 px-6 py-4 text-sm leading-relaxed text-muted-foreground">
-                    {it.a}
+                    className="border-t border-border/40 px-6 py-4 text-sm" style={{ color: "#B0B8C4", lineHeight: 1.8 }}>
+                    <FAQAnswer text={it.a} />
                   </motion.div>
                 )}
               </div>
