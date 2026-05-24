@@ -117,6 +117,30 @@ export const translations = {
       form: { name: "পুরো নাম", email: "ইমেইল", phone: "ফোন নম্বর", brand: "Brand / কোম্পানি", service: "Service Type", budget: "Budget Range", message: "আপনার বার্তা", submit: "পাঠিয়ে দিন", sending: "পাঠানো হচ্ছে…", success: "ধন্যবাদ! আমরা শীঘ্রই যোগাযোগ করব।", error: "কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।" },
       responseTime: "⚡ সাধারণত ২ ঘন্টার মধ্যে Reply",
     },
+    pricing: {
+      heading: "সহজ ও স্বচ্ছ প্যাকেজ",
+      sub: "আপনার চাহিদা অনুযায়ী প্যাকেজ বেছে নিন — অথবা কাস্টম quote-এর জন্য বার্তা দিন।",
+      popular: "জনপ্রিয়",
+      cta: "শুরু করুন",
+      note: "সব মূল্য BDT-তে। কাস্টম প্যাকেজও পাওয়া যায়।",
+      plans: [
+        { name: "Starter", price: "৳৮,০০০", period: "প্রতি ভিডিও", featured: false, features: ["১টি AI presenter ভিডিও (৬০ সেকেন্ড পর্যন্ত)", "১ বার সংশোধন", "HD 1080p", "বাংলা অথবা ইংরেজি", "৩ দিনে ডেলিভারি"] },
+        { name: "Brand", price: "৳২৫,০০০", period: "মাসে ৪টি ভিডিও", featured: true, features: ["মাসে ৪টি AI ভিডিও", "প্রতিটিতে ২ বার সংশোধন", "HD 1080p + reels", "Script ও caption", "Priority WhatsApp সাপোর্ট", "৪৮ ঘন্টায় ডেলিভারি"] },
+        { name: "Enterprise", price: "Custom", period: "বড় ক্যাম্পেইন", featured: false, features: ["আনলিমিটেড ভিডিও", "ডেডিকেটেড ক্রিয়েটিভ টিম", "Multi-platform packaging", "বাংলা + ইংরেজি", "Same-day টার্নঅ্যারাউন্ড", "মাসিক রিপোর্ট"] },
+      ],
+    },
+    faq: {
+      heading: "প্রায়শই জিজ্ঞাসিত",
+      sub: "বুকিং-এর আগে যা জানা দরকার।",
+      items: [
+        { q: "Zyra Elin কি সত্যিকারের মানুষ?", a: "Zyra Elin সম্পূর্ণ AI দ্বারা তৈরি একজন digital brand presenter — কিন্তু অনুভব হবে একদম মানুষের মতো উষ্ণ ও brand-friendly।" },
+        { q: "একটি ভিডিও তৈরিতে কত সময় লাগে?", a: "Starter প্যাকেজে ৩ দিন, Brand প্যাকেজে ৪৮ ঘন্টা, Enterprise-এ same-day পর্যন্ত সম্ভব।" },
+        { q: "কোন কোন ভাষায় কাজ হয়?", a: "বাংলা এবং ইংরেজি, প্রাকৃতিক উচ্চারণ ও code-switching সহ।" },
+        { q: "নিজের script পাঠানো যাবে?", a: "অবশ্যই। script না থাকলে আমরা লিখে দেব — প্রতিটি প্যাকেজে script অন্তর্ভুক্ত।" },
+        { q: "Payment কীভাবে?", a: "৫০% অগ্রিম, ৫০% ডেলিভারির সময়। bKash, Nagad, ব্যাংক ট্রান্সফার ও কার্ড সাপোর্টেড।" },
+        { q: "আপনি কি posting ও ads-ও সামলান?", a: "Brand ও Enterprise প্যাকেজে — Facebook, Instagram, TikTok ও YouTube Shorts-এর জন্য reels প্যাকেজ এবং paid promotion guidance দেওয়া হয়।" },
+      ],
+    },
     footer: { rights: "সর্বস্বত্ব সংরক্ষিত।", powered: "AI Technology দিয়ে চালিত 🤖", quick: "Quick Links", services: "Services", contactCol: "যোগাযোগ", tag: "বাংলাদেশের প্রথম সারির AI Digital Brand Presenter।" },
   },
 };
