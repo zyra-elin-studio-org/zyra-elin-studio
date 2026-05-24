@@ -1,6 +1,6 @@
 export const translations = {
   en: {
-    nav: { home: "Home", about: "About", services: "Services", portfolio: "Portfolio", contact: "Contact", book: "Book Now", admin: "Admin" },
+    nav: { home: "Home", about: "About", services: "Services", portfolio: "Portfolio", pricing: "Pricing", faq: "FAQ", contact: "Contact", book: "Book Now", admin: "Admin" },
     hero: {
       badge: "🤖 Bangladesh's First AI Brand Presenter",
       line1: "Your Brand Deserves",
@@ -45,10 +45,34 @@ export const translations = {
       form: { name: "Full Name", email: "Email", phone: "Phone", brand: "Brand / Company", service: "Service Type", budget: "Budget Range", message: "Your Message", submit: "Send Message", sending: "Sending…", success: "Thanks! I'll be in touch shortly.", error: "Something went wrong. Please try again." },
       responseTime: "⚡ Usually replies within 2 hours",
     },
+    pricing: {
+      heading: "Simple, Transparent Pricing",
+      sub: "Pick a package that fits — or message me for a custom quote.",
+      popular: "Most Popular",
+      cta: "Get Started",
+      note: "All prices in BDT. Custom packages available on request.",
+      plans: [
+        { name: "Starter", price: "৳8,000", period: "per video", featured: false, features: ["1 AI-presenter video (up to 60s)", "1 round of revisions", "HD 1080p export", "Bangla or English", "3-day delivery"] },
+        { name: "Brand", price: "৳25,000", period: "4 videos / month", featured: true, features: ["4 AI videos per month", "2 rounds of revisions each", "HD 1080p + vertical reels", "Script + caption writing", "Priority WhatsApp support", "48-hour delivery"] },
+        { name: "Enterprise", price: "Custom", period: "tailored campaigns", featured: false, features: ["Unlimited videos", "Dedicated creative direction", "Multi-platform packaging", "Bangla + English bilingual", "Same-day turnaround", "Monthly performance report"] },
+      ],
+    },
+    faq: {
+      heading: "Frequently Asked",
+      sub: "Everything you need to know before booking.",
+      items: [
+        { q: "Is Zyra Elin a real person?", a: "Zyra Elin is a fully AI-generated digital brand presenter — designed to feel warm, real and on-brand for every video. No scheduling, no studio costs, premium quality every time." },
+        { q: "How long does a video take?", a: "Starter videos ship in 3 days, Brand-plan videos in 48 hours, and Enterprise can deliver same-day. We confirm the timeline when we receive your brief." },
+        { q: "Which languages are supported?", a: "Bangla and English, with natural pronunciation and code-switching. We can also localize for specific dialects on request." },
+        { q: "Can I send my own script?", a: "Yes. Send your script or just a product brief and we'll write one for you. Every package includes script work." },
+        { q: "How do payments work?", a: "50% advance to start, 50% on final delivery. We accept bKash, Nagad, bank transfer and international card payments." },
+        { q: "Do you handle posting and ads?", a: "On the Brand and Enterprise plans, yes — we package vertical reels for Facebook, Instagram, TikTok and YouTube Shorts, and can advise on paid promotion." },
+      ],
+    },
     footer: { rights: "All rights reserved.", powered: "Powered by AI Technology 🤖", quick: "Quick Links", services: "Services", contactCol: "Contact", tag: "Bangladesh's premier AI digital brand presenter." },
   },
   bn: {
-    nav: { home: "হোম", about: "পরিচিতি", services: "সেবা", portfolio: "পোর্টফোলিও", contact: "যোগাযোগ", book: "বুক করুন", admin: "অ্যাডমিন" },
+    nav: { home: "হোম", about: "পরিচিতি", services: "সেবা", portfolio: "পোর্টফোলিও", pricing: "প্যাকেজ", faq: "প্রশ্নোত্তর", contact: "যোগাযোগ", book: "বুক করুন", admin: "অ্যাডমিন" },
     hero: {
       badge: "🤖 বাংলাদেশের প্রথম AI Brand Presenter",
       line1: "আপনার Brand-এর",
@@ -92,6 +116,30 @@ export const translations = {
       sub: "আপনার brand সম্পর্কে বলুন — সাধারণত ২ ঘন্টার মধ্যে Reply।",
       form: { name: "পুরো নাম", email: "ইমেইল", phone: "ফোন নম্বর", brand: "Brand / কোম্পানি", service: "Service Type", budget: "Budget Range", message: "আপনার বার্তা", submit: "পাঠিয়ে দিন", sending: "পাঠানো হচ্ছে…", success: "ধন্যবাদ! আমরা শীঘ্রই যোগাযোগ করব।", error: "কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।" },
       responseTime: "⚡ সাধারণত ২ ঘন্টার মধ্যে Reply",
+    },
+    pricing: {
+      heading: "সহজ ও স্বচ্ছ প্যাকেজ",
+      sub: "আপনার চাহিদা অনুযায়ী প্যাকেজ বেছে নিন — অথবা কাস্টম quote-এর জন্য বার্তা দিন।",
+      popular: "জনপ্রিয়",
+      cta: "শুরু করুন",
+      note: "সব মূল্য BDT-তে। কাস্টম প্যাকেজও পাওয়া যায়।",
+      plans: [
+        { name: "Starter", price: "৳৮,০০০", period: "প্রতি ভিডিও", featured: false, features: ["১টি AI presenter ভিডিও (৬০ সেকেন্ড পর্যন্ত)", "১ বার সংশোধন", "HD 1080p", "বাংলা অথবা ইংরেজি", "৩ দিনে ডেলিভারি"] },
+        { name: "Brand", price: "৳২৫,০০০", period: "মাসে ৪টি ভিডিও", featured: true, features: ["মাসে ৪টি AI ভিডিও", "প্রতিটিতে ২ বার সংশোধন", "HD 1080p + reels", "Script ও caption", "Priority WhatsApp সাপোর্ট", "৪৮ ঘন্টায় ডেলিভারি"] },
+        { name: "Enterprise", price: "Custom", period: "বড় ক্যাম্পেইন", featured: false, features: ["আনলিমিটেড ভিডিও", "ডেডিকেটেড ক্রিয়েটিভ টিম", "Multi-platform packaging", "বাংলা + ইংরেজি", "Same-day টার্নঅ্যারাউন্ড", "মাসিক রিপোর্ট"] },
+      ],
+    },
+    faq: {
+      heading: "প্রায়শই জিজ্ঞাসিত",
+      sub: "বুকিং-এর আগে যা জানা দরকার।",
+      items: [
+        { q: "Zyra Elin কি সত্যিকারের মানুষ?", a: "Zyra Elin সম্পূর্ণ AI দ্বারা তৈরি একজন digital brand presenter — কিন্তু অনুভব হবে একদম মানুষের মতো উষ্ণ ও brand-friendly।" },
+        { q: "একটি ভিডিও তৈরিতে কত সময় লাগে?", a: "Starter প্যাকেজে ৩ দিন, Brand প্যাকেজে ৪৮ ঘন্টা, Enterprise-এ same-day পর্যন্ত সম্ভব।" },
+        { q: "কোন কোন ভাষায় কাজ হয়?", a: "বাংলা এবং ইংরেজি, প্রাকৃতিক উচ্চারণ ও code-switching সহ।" },
+        { q: "নিজের script পাঠানো যাবে?", a: "অবশ্যই। script না থাকলে আমরা লিখে দেব — প্রতিটি প্যাকেজে script অন্তর্ভুক্ত।" },
+        { q: "Payment কীভাবে?", a: "৫০% অগ্রিম, ৫০% ডেলিভারির সময়। bKash, Nagad, ব্যাংক ট্রান্সফার ও কার্ড সাপোর্টেড।" },
+        { q: "আপনি কি posting ও ads-ও সামলান?", a: "Brand ও Enterprise প্যাকেজে — Facebook, Instagram, TikTok ও YouTube Shorts-এর জন্য reels প্যাকেজ এবং paid promotion guidance দেওয়া হয়।" },
+      ],
     },
     footer: { rights: "সর্বস্বত্ব সংরক্ষিত।", powered: "AI Technology দিয়ে চালিত 🤖", quick: "Quick Links", services: "Services", contactCol: "যোগাযোগ", tag: "বাংলাদেশের প্রথম সারির AI Digital Brand Presenter।" },
   },
