@@ -1,76 +1,54 @@
+## Goal
+Make the Vercel deployment stop serving its own `404 NOT_FOUND` page and forward all requests to the already-working live site.
 
-## Why Vercel returns 404
+## What I found
+- The lines about `dist/server/assets/...` and `chunk size limit` are only build warnings, not the 404 cause.
+- Your live site is already working at `https://zyra-elin-studio.lovable.app`.
+- The current `vercel.json` only adds a rewrite, but it does **not** tell Vercel to stop treating this repo like a normal build target.
+- The screenshot shows Vercel is still serving its own deployment result, which means the current Vercel project behavior is still wrong for this app.
 
-Your project is a Lovable TanStack Start template configured for **Cloudflare Workers**:
+## Plan
+1. **Harden `vercel.json`**
+   - Replace the minimal file with an explicit Vercel config that:
+     - sets the framework preset to `Other` via config
+     - disables build/install/output assumptions in Vercel
+     - keeps a catch-all rewrite to the live Lovable-hosted site
+   - Planned shape:
+     ```json
+     {
+       "$schema": "https://openapi.vercel.sh/vercel.json",
+       "framework": null,
+       "buildCommand": null,
+       "installCommand": null,
+       "outputDirectory": null,
+       "rewrites": [
+         {
+           "source": "/(.*)",
+           "destination": "https://zyra-elin-studio.lovable.app/$1"
+         }
+       ]
+     }
+     ```
 
-- `vite.config.ts` uses `@lovable.dev/vite-tanstack-config`, which bundles `@cloudflare/vite-plugin`.
-- `wrangler.jsonc` declares `main: "src/server.ts"` — a Workers `fetch` handler.
-- `src/server.ts` exports `export default { fetch }` (Workers shape), not a Node server.
+2. **Keep app code untouched**
+   - No route, TanStack, SSR, or UI files need changes for this fix.
+   - I will not touch generated routing files again.
 
-The Vercel build succeeds because Vite still produces `dist/client/*` and `dist/server/*`, but Vercel has:
-- no Worker runtime to execute `src/server.ts`,
-- no `index.html` at the output root (TanStack Start is SSR-only, it never emits one),
-- no framework preset that knows how to serve TanStack Start.
+3. **Give you the exact Vercel settings to verify after deploy**
+   - Root Directory: repo root
+   - Framework Preset: Other
+   - Build Command: empty
+   - Install Command: empty
+   - Output Directory: empty
+   - Then redeploy the latest commit containing `vercel.json`
 
-So every URL — including `/` — resolves to nothing and Vercel returns `404 NOT_FOUND`. This is a runtime/output mismatch, not a routing typo, missing permission, or deleted deployment.
+4. **Validate the expected behavior**
+   - `/` should load the homepage through Vercel
+   - `/about`, `/portfolio`, `/pricing`, etc. should all load through the same proxy
+   - No more Vercel `Congratulations` page and no more `404 NOT_FOUND`
 
-There is no small `vercel.json` tweak that fixes this. The Lovable template does not ship a Vercel adapter, and swapping the Cloudflare plugin for a Vercel/Node adapter would diverge from the Lovable preset and likely break preview + future Lovable updates.
+## Important note
+If the latest `vercel.json` is **not yet in GitHub**, Vercel will keep deploying the old repo state and the issue will remain. So after I make the change, the redeploy must use the latest synced commit.
 
-## Recommended path (pragmatic, keeps Vercel as your front door)
-
-Use Vercel as a **redirect/proxy layer** in front of the Lovable-hosted app, which already runs SSR correctly at `https://zyra-elin-studio.lovable.app`.
-
-Two viable Vercel-only setups:
-
-### Option A — Vercel rewrite proxy (recommended)
-
-Keep the repo as-is. Add a single `vercel.json` at the project root:
-
-```json
-{
-  "rewrites": [
-    { "source": "/(.*)", "destination": "https://zyra-elin-studio.lovable.app/$1" }
-  ]
-}
-```
-
-In Vercel project settings:
-- Framework Preset: **Other**
-- Build Command: *(leave empty)*
-- Output Directory: *(leave empty)*
-- Install Command: *(leave empty)*
-
-Result: visitors hitting `your-vercel-domain.com/...` get the SSR HTML from Lovable, but the URL bar stays on Vercel. Your custom domain can be attached on Vercel as usual.
-
-### Option B — Vercel redirect (simpler, URL changes)
-
-```json
-{
-  "redirects": [
-    { "source": "/(.*)", "destination": "https://zyra-elin-studio.lovable.app/$1", "permanent": false }
-  ]
-}
-```
-
-Visitors are sent to the `.lovable.app` URL. Easiest to set up, but the address bar changes — usually not desired if you've already wired Vercel to a custom domain.
-
-## What I will change in the repo
-
-Only one file:
-
-1. **Create `vercel.json`** at the project root with the Option A rewrite config above.
-
-I will not touch:
-- `vite.config.ts`, `wrangler.jsonc`, `src/server.ts`, or `src/start.ts` (they keep the project building cleanly on Lovable and Cloudflare).
-- Any application code, routes, or styling.
-
-## What you need to do on Vercel after I push
-
-1. Open the Vercel project → **Settings → General**.
-2. Set Framework Preset to **Other** and clear Build/Install/Output commands.
-3. Redeploy (Deployments → ⋯ → Redeploy).
-4. Visit your Vercel domain — it should now serve the full site.
-
-## If you instead want true Vercel-native hosting (no Lovable backend in the loop)
-
-That requires removing `@cloudflare/vite-plugin`, switching to a Node/Vercel adapter for TanStack Start, rewriting `src/server.ts`, and adding `vercel.json` with a Node function. This diverges from the Lovable template and is likely to break with future Lovable updates. I do not recommend it unless you plan to fork off Lovable hosting entirely. Tell me if you want this path and I will plan it out separately.
+## Technical note
+This app is not running as a native Vercel server app here; Vercel is being used as the front door, while the working site is served from the published Lovable deployment behind the scenes. That is the smallest reliable fix for your current setup.
