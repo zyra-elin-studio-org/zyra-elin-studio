@@ -17,28 +17,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    async function loadRole(userId: string) {
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId)
+        .eq("role", "admin")
+        .maybeSingle();
+      if (error) console.error("[useAuth] role lookup failed:", error);
+      setIsAdmin(!!data);
+    }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
       if (s?.user) {
-        setTimeout(() => {
-          supabase.from("user_roles").select("role").eq("user_id", s.user.id).eq("role", "admin").maybeSingle()
-            .then(({ data }) => setIsAdmin(!!data));
-        }, 0);
+        setTimeout(() => { loadRole(s.user.id); }, 0);
       } else {
         setIsAdmin(false);
       }
     });
 
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
+    supabase.auth.getSession().then(async ({ data: { session: s } }) => {
       setSession(s);
-      if (s?.user) {
-        supabase.from("user_roles").select("role").eq("user_id", s.user.id).eq("role", "admin").maybeSingle()
-          .then(({ data }) => { setIsAdmin(!!data); setLoading(false); });
-      } else { setLoading(false); }
+      if (s?.user) await loadRole(s.user.id);
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
 
   const signOut = async () => { await supabase.auth.signOut(); };
 
