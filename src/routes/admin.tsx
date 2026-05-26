@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -14,8 +14,14 @@ function Admin() {
   const nav = useNavigate();
   const [tab, setTab] = useState<Tab>("overview");
 
+  useEffect(() => {
+    if (!loading && !user) {
+      void nav({ to: "/login" });
+    }
+  }, [loading, user, nav]);
+
   if (loading) return <div className="grid min-h-screen place-items-center text-muted-foreground">Loading…</div>;
-  if (!user) { nav({ to: "/login" }); return null; }
+  if (!user) return null;
   if (!isAdmin) {
     return (
       <div className="grid min-h-screen place-items-center px-6 text-center">
