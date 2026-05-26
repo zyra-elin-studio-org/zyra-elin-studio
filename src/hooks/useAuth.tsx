@@ -1,6 +1,7 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { getAdminStatus } from "@/lib/admin.functions";
 
 interface Ctx {
   session: Session | null;
@@ -17,40 +18,57 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadRole(userId: string) {
-      const { data, error } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userId)
-        .eq("role", "admin")
-        .maybeSingle();
-      if (error) console.error("[useAuth] role lookup failed:", error);
-      setIsAdmin(!!data);
+    let mounted = true;
+
+    async function syncAuthState(nextSession: Session | null) {
+      if (!mounted) return;
+
+      setSession(nextSession);
+
+      if (!nextSession?.user) {
+        setIsAdmin(false);
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const result = await getAdminStatus();
+        if (!mounted) return;
+        setIsAdmin(result.isAdmin);
+      } catch (error) {
+        console.error("[useAuth] admin verification failed:", error);
+        if (!mounted) return;
+        setIsAdmin(false);
+      } finally {
+        if (mounted) setLoading(false);
+      }
     }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
-      setSession(s);
-      if (s?.user) {
-        setTimeout(() => { loadRole(s.user.id); }, 0);
-      } else {
-        setIsAdmin(false);
-      }
+      void syncAuthState(s);
     });
 
-    supabase.auth.getSession().then(async ({ data: { session: s } }) => {
-      setSession(s);
-      if (s?.user) await loadRole(s.user.id);
-      setLoading(false);
+    supabase.auth.getSession().then(({ data: { session: s } }) => {
+      void syncAuthState(s);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
-
 
   const signOut = async () => { await supabase.auth.signOut(); };
 
+  const value = useMemo(
+    () => ({ session, user: session?.user ?? null, isAdmin, loading, signOut }),
+    [session, isAdmin, loading],
+  );
+
   return (
-    <AuthContext.Provider value={{ session, user: session?.user ?? null, isAdmin, loading, signOut }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

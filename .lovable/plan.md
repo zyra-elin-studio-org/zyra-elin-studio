@@ -1,25 +1,62 @@
-## Plan
+# Plan
 
-1. Add a database migration to restore API access to the `user_roles` table.
-   - Grant signed-in users permission to read their own roles.
-   - Grant full backend access for admin/server operations.
-   - Keep existing row-level security rules in place.
+## What I will fix
 
-2. Harden the frontend auth role check.
-   - Update the auth hook so it handles role-query errors explicitly instead of silently treating them as “not admin”.
-   - Ensure loading only finishes after the admin-role lookup completes.
+1. Repair the admin auth flow so `/admin` only decides access after the role check is fully finished.
+2. Replace the fragile client-only admin lookup with a more reliable server-backed role check path.
+3. Reset the admin account password to `MyWeb@1234`.
+4. Validate the full sign-in path after the changes.
 
-3. Validate the admin flow end to end.
-   - Confirm `palash.chowdury02@gmail.com` still has the `admin` role.
-   - Re-test login and `/admin` access so the page opens instead of showing “Access denied”.
+## Why the current setup is failing
 
-## Root cause
+- Your backend is healthy.
+- The admin user exists and already has the `admin` role.
+- Login itself is succeeding.
+- The current failure is in the app’s admin authorization flow after login.
+- The `useAuth` hook currently mixes session hydration and async role lookup in a way that can leave `/admin` seeing `isAdmin = false` at the wrong moment.
+- The `/admin` route also performs navigation directly during render, which is brittle and can produce incorrect access outcomes.
 
-The admin account already has the `admin` role in the database, but the app currently cannot read the `user_roles` table through the normal app API because that table is missing explicit grants. The UI then falls back to `isAdmin = false`, which is why you are signed in but still blocked.
+## Implementation steps
+
+### 1) Harden auth state loading
+- Update `src/hooks/useAuth.tsx` so loading stays true until both session restore and admin-role resolution are complete.
+- Remove timing-sensitive behavior around `setTimeout` and make role loading deterministic.
+- Ensure auth state changes cannot briefly mark a real admin as non-admin during first load.
+
+### 2) Fix the admin route guard
+- Update `src/routes/admin.tsx` so it does not navigate during render.
+- Make the route wait for auth resolution cleanly before showing either the dashboard or the access denied state.
+- Keep the current UI, only fix the logic.
+
+### 3) Add a trustworthy admin check path
+- Introduce a server-backed admin verification using the authenticated user context instead of relying only on a browser-side table read.
+- This avoids silent client-side failures and makes the admin decision more reliable across refreshes and deployments.
+- I will also check `src/start.ts` wiring so authenticated server calls can carry the signed-in user token correctly.
+
+### 4) Reset the admin password
+- Set the initial password for `palash.chowdury02@gmail.com` to `MyWeb@1234`.
+- Keep the account ready for immediate sign-in.
+
+### 5) Validate end to end
+- Confirm the admin email can log in.
+- Confirm the role check returns admin.
+- Confirm `/admin` opens the dashboard instead of “Access denied”.
 
 ## Technical details
 
-- Table affected: `public.user_roles`
-- Current problem: row-level rules exist, but API grants are missing
-- App file likely to update: `src/hooks/useAuth.tsx`
-- Expected result after fix: successful sign-in + admin dashboard access for your email
+Files likely to change:
+- `src/hooks/useAuth.tsx`
+- `src/routes/admin.tsx`
+- `src/start.ts`
+- one small new server function file for admin verification
+
+Backend change:
+- reset password for the existing admin user only
+
+## Expected result
+
+After this, you should be able to sign in with:
+- Email: `palash.chowdury02@gmail.com`
+- Password: `MyWeb@1234`
+
+And the admin dashboard should open normally instead of showing “Access denied”.
