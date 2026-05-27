@@ -343,7 +343,7 @@ function Images() {
 
       {editing && (
         <EditModal title="Edit image" onClose={() => setEditing(null)} onSave={async (patch) => {
-          const { error } = await supabase.from("images").update(patch).eq("id", editing.id);
+          const { error } = await supabase.from("images").update(patch as never).eq("id", editing.id);
           if (error) toast.error(error.message); else { toast.success("Updated"); setEditing(null); refresh(); }
         }} fields={[
           ["title_en", "Title (EN)", editing.title_en],
