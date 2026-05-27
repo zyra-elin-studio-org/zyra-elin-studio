@@ -15,8 +15,8 @@ export const getAdminStatus = createServerFn({ method: "GET" })
       .maybeSingle();
 
     if (error) {
-      console.error("[getAdminStatus] role lookup failed:", error);
-      throw new Error("Unable to verify admin access");
+      console.error("[getAdminStatus] role lookup failed:", { userId, error });
+      return { isAdmin: false, userId };
     }
 
     return { isAdmin: !!data, userId };
