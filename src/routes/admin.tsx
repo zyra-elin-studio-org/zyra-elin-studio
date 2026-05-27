@@ -98,6 +98,14 @@ function Overview() {
 
 const cats = ["general", "brand-promo", "product-review", "fashion", "food", "tech"];
 
+async function uploadToBucket(file: File, bucket: "media-videos" | "media-images"): Promise<string | null> {
+  const ext = file.name.split(".").pop() || "bin";
+  const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const { error } = await supabase.storage.from(bucket).upload(path, file, { cacheControl: "3600", upsert: false });
+  if (error) { toast.error(error.message); return null; }
+  return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+}
+
 function Videos() {
   const qc = useQueryClient();
   const { data: videos } = useQuery({
@@ -105,10 +113,12 @@ function Videos() {
     queryFn: async () => (await supabase.from("videos").select("*").order("sort_order").order("created_at", { ascending: false })).data ?? [],
   });
   const [form, setForm] = useState({ title_en: "", title_bn: "", video_url: "", thumbnail_url: "", category: "general", featured: false });
+  const [upV, setUpV] = useState(false);
+  const [upT, setUpT] = useState(false);
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.title_en || !form.video_url) { toast.error("Title & URL required"); return; }
+    if (!form.title_en || !form.video_url) { toast.error("Title & video (URL or upload) required"); return; }
     const { error } = await supabase.from("videos").insert(form);
     if (error) toast.error(error.message); else { toast.success("Added"); setForm({ title_en: "", title_bn: "", video_url: "", thumbnail_url: "", category: "general", featured: false }); qc.invalidateQueries({ queryKey: ["admin-videos"] }); qc.invalidateQueries({ queryKey: ["videos"] }); }
   }
@@ -125,8 +135,32 @@ function Videos() {
       <form onSubmit={add} className="glass mt-6 grid gap-3 rounded-2xl p-5 sm:grid-cols-2">
         <input className={input} placeholder="Title (EN) *" value={form.title_en} onChange={(e) => setForm({ ...form, title_en: e.target.value })} />
         <input className={input} placeholder="Title (BN)" value={form.title_bn} onChange={(e) => setForm({ ...form, title_bn: e.target.value })} />
-        <input className={input + " sm:col-span-2"} placeholder="Video URL (YouTube or direct) *" value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} />
+        <input className={input + " sm:col-span-2"} placeholder="Video URL (YouTube, Facebook page video, or direct) *" value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} />
+        <label className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground sm:col-span-2">
+          <span>…or upload from PC:</span>
+          <input type="file" accept="video/*" disabled={upV} onChange={async (e) => {
+            const f = e.target.files?.[0]; if (!f) return;
+            setUpV(true);
+            const url = await uploadToBucket(f, "media-videos");
+            setUpV(false);
+            if (url) { setForm((p) => ({ ...p, video_url: url })); toast.success("Video uploaded"); }
+            e.target.value = "";
+          }} className="text-xs" />
+          {upV && <span className="text-gold">Uploading…</span>}
+        </label>
         <input className={input + " sm:col-span-2"} placeholder="Thumbnail URL" value={form.thumbnail_url} onChange={(e) => setForm({ ...form, thumbnail_url: e.target.value })} />
+        <label className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground sm:col-span-2">
+          <span>…or upload thumbnail:</span>
+          <input type="file" accept="image/*" disabled={upT} onChange={async (e) => {
+            const f = e.target.files?.[0]; if (!f) return;
+            setUpT(true);
+            const url = await uploadToBucket(f, "media-images");
+            setUpT(false);
+            if (url) { setForm((p) => ({ ...p, thumbnail_url: url })); toast.success("Thumbnail uploaded"); }
+            e.target.value = "";
+          }} className="text-xs" />
+          {upT && <span className="text-gold">Uploading…</span>}
+        </label>
         <select className={input} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
           {cats.map((c) => <option key={c}>{c}</option>)}
         </select>
@@ -150,9 +184,10 @@ function Images() {
   const qc = useQueryClient();
   const { data: images } = useQuery({ queryKey: ["admin-images"], queryFn: async () => (await supabase.from("images").select("*").order("sort_order").order("created_at", { ascending: false })).data ?? [] });
   const [form, setForm] = useState({ title_en: "", title_bn: "", image_url: "", category: "general" });
+  const [upI, setUpI] = useState(false);
   async function add(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.title_en || !form.image_url) { toast.error("Title & URL required"); return; }
+    if (!form.title_en || !form.image_url) { toast.error("Title & image (URL or upload) required"); return; }
     const { error } = await supabase.from("images").insert(form);
     if (error) toast.error(error.message); else { toast.success("Added"); setForm({ title_en: "", title_bn: "", image_url: "", category: "general" }); qc.invalidateQueries({ queryKey: ["admin-images"] }); }
   }
@@ -169,11 +204,24 @@ function Images() {
         <input className={input} placeholder="Title (EN) *" value={form.title_en} onChange={(e) => setForm({ ...form, title_en: e.target.value })} />
         <input className={input} placeholder="Title (BN)" value={form.title_bn} onChange={(e) => setForm({ ...form, title_bn: e.target.value })} />
         <input className={input + " sm:col-span-2"} placeholder="Image URL *" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
+        <label className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground sm:col-span-2">
+          <span>…or upload from PC:</span>
+          <input type="file" accept="image/*" disabled={upI} onChange={async (e) => {
+            const f = e.target.files?.[0]; if (!f) return;
+            setUpI(true);
+            const url = await uploadToBucket(f, "media-images");
+            setUpI(false);
+            if (url) { setForm((p) => ({ ...p, image_url: url })); toast.success("Image uploaded"); }
+            e.target.value = "";
+          }} className="text-xs" />
+          {upI && <span className="text-gold">Uploading…</span>}
+        </label>
         <select className={input} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
           {cats.map((c) => <option key={c}>{c}</option>)}
         </select>
         <button className="rounded-lg bg-gold-gradient px-4 py-2 text-sm font-semibold text-primary-foreground sm:col-span-2">Add image</button>
       </form>
+
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {images?.map((im) => (
           <div key={im.id} className="glass overflow-hidden rounded-xl">
