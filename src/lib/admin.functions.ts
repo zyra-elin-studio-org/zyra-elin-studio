@@ -1,23 +1,20 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 export const getAdminStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { userId } = context;
+    const { supabase, userId } = context;
 
-    const { data, error } = await supabaseAdmin
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
+    const { data, error } = await supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "admin",
+    });
 
     if (error) {
-      console.error("[getAdminStatus] role lookup failed:", error);
-      throw new Error("Unable to verify admin access");
+      console.error("[getAdminStatus] role lookup failed:", { userId, error });
+      return { isAdmin: false, userId };
     }
 
-    return { isAdmin: !!data, userId };
+    return { isAdmin: data === true, userId };
   });
