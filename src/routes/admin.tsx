@@ -184,9 +184,10 @@ function Images() {
   const qc = useQueryClient();
   const { data: images } = useQuery({ queryKey: ["admin-images"], queryFn: async () => (await supabase.from("images").select("*").order("sort_order").order("created_at", { ascending: false })).data ?? [] });
   const [form, setForm] = useState({ title_en: "", title_bn: "", image_url: "", category: "general" });
+  const [upI, setUpI] = useState(false);
   async function add(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.title_en || !form.image_url) { toast.error("Title & URL required"); return; }
+    if (!form.title_en || !form.image_url) { toast.error("Title & image (URL or upload) required"); return; }
     const { error } = await supabase.from("images").insert(form);
     if (error) toast.error(error.message); else { toast.success("Added"); setForm({ title_en: "", title_bn: "", image_url: "", category: "general" }); qc.invalidateQueries({ queryKey: ["admin-images"] }); }
   }
@@ -203,11 +204,24 @@ function Images() {
         <input className={input} placeholder="Title (EN) *" value={form.title_en} onChange={(e) => setForm({ ...form, title_en: e.target.value })} />
         <input className={input} placeholder="Title (BN)" value={form.title_bn} onChange={(e) => setForm({ ...form, title_bn: e.target.value })} />
         <input className={input + " sm:col-span-2"} placeholder="Image URL *" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
+        <label className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground sm:col-span-2">
+          <span>…or upload from PC:</span>
+          <input type="file" accept="image/*" disabled={upI} onChange={async (e) => {
+            const f = e.target.files?.[0]; if (!f) return;
+            setUpI(true);
+            const url = await uploadToBucket(f, "media-images");
+            setUpI(false);
+            if (url) { setForm((p) => ({ ...p, image_url: url })); toast.success("Image uploaded"); }
+            e.target.value = "";
+          }} className="text-xs" />
+          {upI && <span className="text-gold">Uploading…</span>}
+        </label>
         <select className={input} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
           {cats.map((c) => <option key={c}>{c}</option>)}
         </select>
         <button className="rounded-lg bg-gold-gradient px-4 py-2 text-sm font-semibold text-primary-foreground sm:col-span-2">Add image</button>
       </form>
+
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {images?.map((im) => (
           <div key={im.id} className="glass overflow-hidden rounded-xl">
